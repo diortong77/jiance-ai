@@ -21,17 +21,42 @@ export default async function handler(req, res) {
 主题：${theme}
 重点：${focus}
 
-请输出：
+请严格按照下面格式输出，不要改标题名字：
 
-【品牌分析】
-【用户需求理解】
-【3条短视频脚本】
+### 品牌分析
+输出这个品牌适合的短视频内容调性、表达风格和推荐方向。
 
-每条脚本包含：
+### 用户需求理解
+总结这次视频最应该突出的核心信息、传播目标和建议表达方式。
+
+### 脚本1：情绪共鸣型
+包含：
 - 标题
-- 开头
-- 内容
-- 结尾
+- 开头3秒钩子
+- 镜头设计
+- 台词文案
+- 结尾引导
+
+### 脚本2：产品卖点型
+包含：
+- 标题
+- 开头3秒钩子
+- 镜头设计
+- 台词文案
+- 结尾引导
+
+### 脚本3：剧情反转型
+包含：
+- 标题
+- 开头3秒钩子
+- 镜头设计
+- 台词文案
+- 结尾引导
+
+要求：
+- 内容要真实可用
+- 不要空话
+- 语言自然
 `;
 
     const response = await fetch("https://api.deepseek.com/chat/completions", {
@@ -44,7 +69,8 @@ export default async function handler(req, res) {
         model: "deepseek-chat",
         messages: [
           { role: "user", content: prompt }
-        ]
+        ],
+        temperature: 0.8
       })
     });
 
