@@ -2,6 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>简策AI</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -9,27 +10,47 @@
 
   <div class="container">
 
-    <h1>简策AI</h1>
-    <p class="subtitle">输入品牌和需求，生成短视频脚本</p>
+    <header class="hero">
+      <div class="badge">AI 短视频脚本生成</div>
+      <h1>简策AI</h1>
+      <p class="subtitle">
+        输入品牌与传播需求，快速生成更贴近场景的短视频脚本
+      </p>
+    </header>
 
-    <div class="card">
+    <div class="card form-card">
       <form id="form">
-        <label>品牌名称</label>
-        <input id="brand" placeholder="例如：瑞幸咖啡">
+        <div class="field">
+          <label for="brand">品牌名称</label>
+          <input id="brand" placeholder="例如：瑞幸咖啡">
+        </div>
 
-        <label>视频主题</label>
-        <input id="theme" placeholder="例如：新品推广">
+        <div class="field">
+          <label for="theme">视频主题</label>
+          <input id="theme" placeholder="例如：新品推广">
+        </div>
 
-        <label>重点表达</label>
-        <textarea id="focus" placeholder="例如：低糖、提神、适合通勤"></textarea>
+        <div class="field">
+          <label for="focus">重点表达</label>
+          <textarea id="focus" placeholder="例如：低糖、提神、适合通勤"></textarea>
+        </div>
 
-        <button type="submit">生成脚本</button>
+        <button id="submitBtn" type="submit">生成脚本</button>
       </form>
     </div>
 
-    <div class="card">
-      <h3>生成结果</h3>
-      <pre id="result"></pre>
+    <div class="card result-card">
+      <div class="result-top">
+        <h3>生成结果</h3>
+        <span id="status" class="status">等待生成</span>
+      </div>
+
+      <div id="loading" class="loading hidden">
+        <div class="spinner"></div>
+        <p>正在分析品牌和需求，请稍候...</p>
+      </div>
+
+      <pre id="result">这里会显示品牌分析、需求理解和脚本内容。</pre>
     </div>
 
   </div>
