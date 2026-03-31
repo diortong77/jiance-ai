@@ -10,6 +10,10 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "缺少参数" });
     }
 
+    if (!process.env.DEEPSEEK_API_KEY) {
+      return res.status(500).json({ error: "没有检测到 DEEPSEEK_API_KEY" });
+    }
+
     const prompt = `
 你是一个短视频营销专家。
 
@@ -46,13 +50,25 @@ export default async function handler(req, res) {
 
     const data = await response.json();
 
-    return res.status(200).json({
-      result: data.choices[0].message.content
-    });
+    if (!response.ok) {
+      return res.status(response.status).json({
+        error: data?.error?.message || "DeepSeek 调用失败"
+      });
+    }
+
+    const result = data?.choices?.[0]?.message?.content;
+
+    if (!result) {
+      return res.status(500).json({
+        error: "接口返回成功，但没有拿到内容"
+      });
+    }
+
+    return res.status(200).json({ result });
 
   } catch (err) {
     return res.status(500).json({
-      error: err.message
+      error: err.message || "服务器错误"
     });
   }
 }
