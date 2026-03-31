@@ -11,6 +11,52 @@ function escapeHtml(text) {
     .replaceAll(">", "&gt;");
 }
 
+function cleanLine(line) {
+  return line
+    .replace(/^###\s*/, "")
+    .replace(/^\*\s*/, "")
+    .replace(/^-+\s*/, "")
+    .trim();
+}
+
+function formatInline(text) {
+  return escapeHtml(text).replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+}
+
+function getSectionMeta(title) {
+  const cleanTitle = cleanLine(title);
+
+  if (cleanTitle.includes("脚本1")) {
+    return { title: cleanTitle, badge: "脚本", className: "script" };
+  }
+  if (cleanTitle.includes("脚本2")) {
+    return { title: cleanTitle, badge: "脚本", className: "script" };
+  }
+  if (cleanTitle.includes("脚本3")) {
+    return { title: cleanTitle, badge: "脚本", className: "script" };
+  }
+
+  return { title: cleanTitle, badge: "分析", className: "analysis" };
+}
+
+function renderContent(content) {
+  const rawLines = content.split("\n").map(line => line.trim()).filter(Boolean);
+
+  if (rawLines.length === 0) {
+    return `<div class="result-paragraph">暂无内容</div>`;
+  }
+
+  const html = rawLines.map(line => {
+    const cleaned = cleanLine(line);
+
+    if (!cleaned) return "";
+
+    return `<div class="result-line">${formatInline(cleaned)}</div>`;
+  }).join("");
+
+  return `<div class="result-content">${html}</div>`;
+}
+
 function renderSections(text) {
   const parts = text.split("### ").map(item => item.trim()).filter(Boolean);
 
@@ -21,14 +67,18 @@ function renderSections(text) {
 
   const html = parts.map(part => {
     const lines = part.split("\n");
-    const title = lines[0]?.trim() || "未命名模块";
+    const rawTitle = lines[0] || "未命名模块";
     const content = lines.slice(1).join("\n").trim();
+    const meta = getSectionMeta(rawTitle);
 
     return `
-      <div class="result-section">
-        <h4>${escapeHtml(title)}</h4>
-        <div class="content">${escapeHtml(content)}</div>
-      </div>
+      <section class="result-section ${meta.className}">
+        <div class="result-title">
+          <span class="result-badge">${meta.badge}</span>
+          <h4>${escapeHtml(meta.title)}</h4>
+        </div>
+        ${renderContent(content)}
+      </section>
     `;
   }).join("");
 
